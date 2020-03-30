@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yc.dao.SGMapper">
+	<resultMap type="Shop" id="map">
+		<id column="sid" property="sid"/>
+		<result column="sname" property="sname"/>
+		<result column="sdate" property="sdate"/>
+		<collection property="goods" ofType="Good" select="getGoodBySid" column="sid">
+		</collection>
+	</resultMap>
+	<select id="getList" resultMap="map">
+		select *from shop where 1=1
+		<if test="keyword!=null and keyword!=''">
+		</if>
+	</select>
+	<select id="getGoodBySid" resultType="Good">
+		SELECT b.gid,b.gname from center a
+		LEFT JOIN good b
+		on a.gid=b.gid where a.sid=#{sid} 
+	</select>
+	<select id="getGoods" resultType="Good">
+		select *from good
+	</select>
+	<insert id="addShop" useGeneratedKeys="true" keyProperty="sid">
+		insert into shop(sname,sdate) values(#{sname},#{sdate})
+	</insert>
+	<insert id="addCenter">
+		insert into center values
+		<foreach collection="idss" item="gid" separator=",">
+			(#{sid},#{gid})
+		</foreach>
+	</insert>
+	<select id="Shopdetails" resultMap="map">
+		select *from shop where sid=#{sid}
+	</select>
+	<delete id="delCenter">
+		delete from center where sid=#{i}
+	
+	</delete>
+	<delete id="delShop">
+		delete from shop where sid=#{i}
+	
+	</delete>
+</mapper>
